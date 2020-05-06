@@ -25,5 +25,6 @@ import './index.scss';
 
 var root = document.getElementById('root');
 // root.append(img);
+console.log(44444);
 
 root.innerHTML = '<div class="iconfont iconEnterpriseWeChat"></div>';
