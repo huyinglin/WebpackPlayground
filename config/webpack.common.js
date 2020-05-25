@@ -1,10 +1,12 @@
 const path = require('path');
+const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
 	entry: {
-		main: './src/index.js'
+    main: './src/index.js',
+    another: './src/another-module.js'
 	},
 	module: {
     rules: [{
@@ -58,8 +60,31 @@ module.exports = {
     }),
     new CleanWebpackPlugin(),
   ],
+  optimization: {
+    splitChunks: {
+      chunks: 'async',
+      minSize: 30000,
+      minRemainingSize: 0,
+      maxSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 6,
+      maxInitialRequests: 4,
+      automaticNameDelimiter: '~',
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true
+        }
+      }
+    }
+  },
 	output: {
-    filename: 'dist.js',
+    filename: '[name].bundle.js',
 		path: path.resolve(__dirname, '../dist')
 	}
 }
