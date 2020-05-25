@@ -30,19 +30,27 @@ const devConfig = {
    */
   devtool: 'cheap-module-eval-source-map',
   devServer: {
-    contentBase: './dist',
-    open: true,
-    open: 'Chrome',
-    port: 8080,
-    hot: true,
-    proxy: {
+    contentBase: './dist', // 指定目录
+    open: true, // 启动时是否打开浏览器
+    // open: 'Chrome', // 指定浏览器
+    port: 8080, // 服务端口
+    hot: true, // 热模块替换
+    proxy: { // 原理是使用 http-proxy-middleware
       '/api': {
         target: 'http://localhost:3000',
-        pathRewrite: {'^/api' : ''},
-        changeOrigin: true
+        pathRewrite: {'^/api': ''}, // 可以将url中的`/api`替换成空字符串
+        changeOrigin: true, // 解决跨域问题。原理：本地会虚拟一个服务器接收你的请求并代你发送该请求
+        secure: false, // 可代理到https的target
       }
-    }
+    },
+    // 将多个路径代理到同一个target下，可以用下面的写法
+    // proxy: [{
+    //   context: ['/auth', '/api'],
+    //   target: 'http://localhost:3000',
+    // }],
+
   },
+  // historyApiFallback: true, // 404时会默认返回首页
   plugins: [
 		new webpack.HotModuleReplacementPlugin()
 	],

@@ -5,7 +5,8 @@
   "scripts": {
     "start": "webpack-dev-server --config ./config/webpack.dev.js",
     "build": "webpack --config ./config/webpack.prod.js",
-    "build-dev": "webpack --config ./config/webpack.dev.js"
+    "build-dev": "webpack --config ./config/webpack.dev.js",
+    "server": "node server.js"
   },
   "author": "",
   "license": "ISC",
@@ -18,6 +19,7 @@
     "autoprefixer": "^9.7.6",
     "clean-webpack-plugin": "^3.0.0",
     "css-loader": "^3.5.3",
+    "express": "^4.17.1",
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "node-sass": "^4.14.0",
@@ -27,7 +29,9 @@
     "url-loader": "^4.1.0",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.10.3"
+    "webpack-dev-middleware": "^3.7.2",
+    "webpack-dev-server": "^3.10.3",
+    "webpack-merge": "^4.2.2"
   },
   "dependencies": {
     "lodash": "^4.17.15"
