@@ -56,7 +56,7 @@ const devConfig = {
 	],
 	optimization: {
 		usedExports: true
-	}
+	},
   // entry: './src/index.js',
 
   // output: {
@@ -64,12 +64,13 @@ const devConfig = {
   //   // publicPath: 'http://cdn.com',
   //   path: path.resolve(__dirname, 'dist'),
   // },
-  // plugins: [
-  //   new HtmlWebpackPlugin({
-  //     template: './index.html', // 以template中的html为模板，打包后生成index.html
-  //   }),
-  //   new CleanWebpackPlugin(), // 清除上次的打包文件
-  // ],
+  plugins: [
+    // new HtmlWebpackPlugin({
+    //   template: './index.html', // 以template中的html为模板，打包后生成index.html
+    // }),
+    // new CleanWebpackPlugin(), // 清除上次的打包文件
+    new webpack.HotModuleReplacementPlugin()
+  ],
 }
 
 module.exports = merge(commonConfig, devConfig);
