@@ -1,6 +1,7 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 
 module.exports = {
 	entry: {
@@ -58,11 +59,13 @@ module.exports = {
       ]
     }]
   },
+  stats: 'errors-only', // 打包日志如何显示
 	plugins: [
 		new HtmlWebpackPlugin({
       template: './index.html', // 以template中的html为模板，打包后生成index.html
     }),
     new CleanWebpackPlugin(),
+    new FriendlyErrorsWebpackPlugin(), // 美化打包结果，一定要配合 stats: 'errors-only' 使用
   ],
 	output: {
     filename: 'dist.js',

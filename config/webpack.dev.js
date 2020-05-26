@@ -69,7 +69,7 @@ const devConfig = {
     //   template: './index.html', // 以template中的html为模板，打包后生成index.html
     // }),
     // new CleanWebpackPlugin(), // 清除上次的打包文件
-    new webpack.HotModuleReplacementPlugin()
+    new webpack.HotModuleReplacementPlugin(),
   ],
 }
 
