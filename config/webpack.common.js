@@ -27,6 +27,12 @@ module.exports = {
         }
       }
     }, {
+      test: /\.js$/,
+      exclude: /node_modules/, // 忽略node_modules
+      loader: 'babel-loader',
+      // use: {
+      // }
+    }, {
       test: /\.scss$/,
       use: [
         {

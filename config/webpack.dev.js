@@ -55,7 +55,7 @@ const devConfig = {
 		new webpack.HotModuleReplacementPlugin()
 	],
 	optimization: {
-		usedExports: true
+		// usedExports: true
 	},
   // entry: './src/index.js',
 

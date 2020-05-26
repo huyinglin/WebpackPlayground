@@ -14,8 +14,11 @@
 
 import IMG from './img.png';
 import './index.scss';
+// import "@babel/polyfill";
 // import style from './index.scss';
 // import createImg from './createImg';
+import React from 'react';
+import ReactDom from 'react-dom';
 
 // createImg();
 
@@ -27,4 +30,23 @@ var root = document.getElementById('root');
 // root.append(img);
 console.log(44444);
 
-root.innerHTML = '<div class="iconfont iconEnterpriseWeChat"></div>';
+function App() {
+  return (
+    <div>
+      hello react
+    </div>
+  );
+}
+
+ReactDom.render(<App/>, root);
+
+const arr = [
+  new Promise(() => {}),
+  new Promise(() => {})
+];
+
+arr.map(item => {
+  console.log(item);
+});
+
+// root.innerHTML = '<div class="iconfont iconEnterpriseWeChat"></div>';
