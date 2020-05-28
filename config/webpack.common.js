@@ -2,10 +2,12 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
 	entry: {
-		main: './src/index.js'
+    main: './src/index.js'
 	},
 	module: {
     rules: [{
@@ -34,6 +36,39 @@ module.exports = {
       // use: {
       // }
     }, {
+      test: /\.less$/,
+      use: [
+        {
+          loader: MiniCssExtractPlugin.loader, // 提取 js 中引入的 css 打包到单独文件中，然后通过标签 <link> 添加到头部
+          options: {
+            hmr: true, // 只在开发模式中启用热更新
+            reloadAll: true, // 如果模块热更新不起作用，重新加载全部样式
+          }
+        },
+        // {
+        //   loader: 'style-loader' // 将css-loader打包好的css代码以<style>标签的形式插入到html文件中
+        // },
+        {
+          loader: 'css-loader', // babel css
+          options: {
+            importLoaders: 2,
+          }
+        },
+        'less-loader',
+        {
+          loader: 'postcss-loader',
+          options: {
+            ident: 'postcss',
+            plugins: [
+              require('autoprefixer'),
+            ]
+          }
+        },
+      ]
+    }, {
+      test: /\.css$/,
+	    use: ['style-loader', 'css-loader']
+    }, {
       test: /\.scss$/,
       use: [
         {
@@ -52,8 +87,7 @@ module.exports = {
               require('autoprefixer'),
             ]
           }
-        },
-        {
+        }, {
           loader: 'sass-loader'
         }
       ]
@@ -66,9 +100,19 @@ module.exports = {
     }),
     new CleanWebpackPlugin(),
     // new FriendlyErrorsWebpackPlugin(), // 美化打包结果，一定要配合 stats: 'errors-only' 使用
+    // new BundleAnalyzerPlugin({ // 打包分析
+    //   analyzerHost: '127.0.0.1',
+    //   analyzerPort: 8889,
+    //   openAnalyzer: true,
+    // }),
+    new MiniCssExtractPlugin({ // css 分割
+      filename: '[name].css', // 直接引用【index.html（入口文件） 引入的名字】
+      chunkFilename: '[name].chunk.css' // 间接引用【其他地方引入使用的名字】
+    })
   ],
 	output: {
-    filename: 'dist.js',
+    filename: '[name].[hash]js', // [hash] 当内容有改动时，hash会改变
+    chunkFilename: '[name].[hash].js',
 		path: path.resolve(__dirname, '../dist')
 	}
 }

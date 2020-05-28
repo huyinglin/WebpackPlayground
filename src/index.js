@@ -1,38 +1,20 @@
-// ES Moudule 模块引入方式
-// import Header from './header.js';
-// import Sidebar from './sidebar.js';
-// import Content from './content.js';
-
-// CommonJS
-// const Header = require('./header.js');
-// const Sidebar = require('./sidebar.js');
-// const Content = require('./content.js');
-
-// new Header();
-// new Sidebar();
-// new Content();
-
-import IMG from './img.png';
-import './index.scss';
-// import "@babel/polyfill";
-// import style from './index.scss';
-// import createImg from './createImg';
 import React from 'react';
 import ReactDom from 'react-dom';
-
-// createImg();
-
-// var img = new Image();
-// img.src = IMG;
-// img.classList.add(style.img);
+import _ from 'lodash';
+import './index.less';
+// import fun from './async.js'
 
 var root = document.getElementById('root');
-// root.append(img);
-console.log(44444);
+
+document.addEventListener('click', () => {
+  import('./async.js').then(({default: func}) => {
+    func();
+  })
+})
 
 function App() {
   return (
-    <div>
+    <div className="wrap">
       hello react
     </div>
   );
@@ -40,13 +22,8 @@ function App() {
 
 ReactDom.render(<App/>, root);
 
-const arr = [
-  new Promise(() => {}),
-  new Promise(() => {})
-];
+const arr = [1, 2, 45];
 
-arr.map(item => {
+_.map(arr, (item => {
   console.log(item);
-});
-
-// root.innerHTML = '<div class="iconfont iconEnterpriseWeChat"></div>';
+}));

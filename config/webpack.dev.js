@@ -55,7 +55,34 @@ const devConfig = {
 		new webpack.HotModuleReplacementPlugin()
 	],
 	optimization: {
-		// usedExports: true
+    // usedExports: true
+    splitChunks: {
+      chunks: 'all', // "initial" | "all"(推荐) | "async" (默认就是async) | 函数
+      minSize: 30 * 1000, // 30kb，表示当包的大小大于 30kb 的时候，才会进行代码分割
+      minChunks: 1, // 表示包被引用几次以上之后，才会进行代码分割
+      maxAsyncRequests: 5, // 按需加载的最大并行请求数
+      maxInitialRequests: 3, // 最大的初始化加载次数，最大的初始请求数是为了防止 chunk 划分的过于细致，导致大量的文件请求，降低性能。
+      automaticNameDelimiter: '~', // 打包分隔符
+      name: true,       // 打包后的名称，此选项可接收 function
+      cacheGroups: {   // 这里开始设置缓存的 chunks ，缓存组，可以有多个
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10, // 权重
+        },
+        styles: { // 将css打包到一个文件中
+          name: 'styels',
+          test: /\.(c|le)ss$/, // 对所有的 less 或者 css 文件
+          chunks: 'all',
+          enforce: true, // 忽略其他的参数，比如 minsize、minchunks 等，只要是样式文件就去做代码的拆分
+        },
+        default: {
+          minChunks: 2, // 至少被引用两次以上才会放到这个缓存组中来
+          priority: -20,
+          filename: 'vendors', // 打包后缓存组的名字
+          reuseExistingChunk: true, // 可设置是否重用该chunk
+        }
+      }
+    }
 	},
   // entry: './src/index.js',
 
