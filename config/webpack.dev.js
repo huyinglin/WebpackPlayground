@@ -1,3 +1,7 @@
+/* eslint-disable no-dupe-keys */
+/* eslint-disable indent */
+/* eslint-disable no-multi-spaces */
+/* eslint-disable comma-dangle */
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
@@ -29,7 +33,8 @@ const devConfig = {
    * pro: cheap-module-source-map
    */
   devtool: 'cheap-module-eval-source-map',
-  devServer: {
+  devServer: { // devServer会将打包文件存在内存中，所以速度更快
+    overlay: true, // 会将lint错误或编译错误，显示一个浮层
     contentBase: './dist', // 指定目录
     open: true, // 启动时是否打开浏览器
     // open: 'Chrome', // 指定浏览器
@@ -38,7 +43,9 @@ const devConfig = {
     proxy: { // 原理是使用 http-proxy-middleware
       '/api': {
         target: 'http://localhost:3000',
-        pathRewrite: {'^/api': ''}, // 可以将url中的`/api`替换成空字符串
+        pathRewrite: {
+          'header.json': 'test.json'  // 可以将url中的`header.json`替换成test.json
+        },
         changeOrigin: true, // 解决跨域问题。原理：本地会虚拟一个服务器接收你的请求并代你发送该请求
         secure: false, // 可代理到https的target
       }
@@ -48,9 +55,8 @@ const devConfig = {
     //   context: ['/auth', '/api'],
     //   target: 'http://localhost:3000',
     // }],
-
+    // historyApiFallback: true, // 404时会默认返回首页
   },
-  // historyApiFallback: true, // 404时会默认返回首页
   plugins: [
 		new webpack.HotModuleReplacementPlugin()
 	],

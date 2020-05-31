@@ -6,10 +6,14 @@ const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
-	entry: {
-    main: './src/index.js'
-	},
-	module: {
+  entry: {
+    main: './src/index.tsx',
+  },
+  resolve: {
+    extensions: ['.js', '.jsx'],
+    mainFiles: ['index'],
+  },
+  module: {
     rules: [{
       test: /\.(jpg|png|gif)$/,
       use: {
@@ -18,8 +22,8 @@ module.exports = {
           name: '[name].[ext]',
           outputPath: 'images/',
           limit: 2048, // 2048 === 2kb，如果文件超过这个大小，就会打包成文件。不然就打包成inline JS的base64的 Data URL
-        }
-      }
+        },
+      },
     }, {
       test: /\.(eot|ttf|svg|woff)$/,
       use: {
@@ -27,14 +31,25 @@ module.exports = {
         options: {
           name: '[name].[ext]',
           outputPath: 'font/',
-        }
-      }
+        },
+      },
     }, {
-      test: /\.js$/,
+      test: /\.jsx?$/,
       exclude: /node_modules/, // 忽略node_modules
-      loader: 'babel-loader',
-      // use: {
-      // }
+      use: ['babel-loader',
+        // { // 这样会降低打包速度
+        //   loader: 'eslint-loader',
+        //   force: 'pre', // 强制执行顺序，第一个执行
+        //   options: {
+        //     fix: true, // 自动修复错误
+        //     cache: true,
+        //   }
+        // }
+      ],
+    }, {
+      test: /\.tsx?$/,
+      exclude: /node_modules/, // 忽略node_modules
+      loader: 'ts-loader',
     }, {
       test: /\.less$/,
       use: [
@@ -43,7 +58,7 @@ module.exports = {
           options: {
             hmr: true, // 只在开发模式中启用热更新
             reloadAll: true, // 如果模块热更新不起作用，重新加载全部样式
-          }
+          },
         },
         // {
         //   loader: 'style-loader' // 将css-loader打包好的css代码以<style>标签的形式插入到html文件中
@@ -52,7 +67,7 @@ module.exports = {
           loader: 'css-loader', // babel css
           options: {
             importLoaders: 2,
-          }
+          },
         },
         'less-loader',
         {
@@ -61,41 +76,41 @@ module.exports = {
             ident: 'postcss',
             plugins: [
               require('autoprefixer'),
-            ]
-          }
+            ],
+          },
         },
-      ]
+      ],
     }, {
       test: /\.css$/,
-	    use: ['style-loader', 'css-loader']
-    }, {
-      test: /\.scss$/,
-      use: [
-        {
-          loader: 'style-loader'
-        }, {
-          loader: 'css-loader',
-          options: {
-            importLoaders: 2, // 0 => 无 loader(默认); 1 => postcss-loader; 2 => postcss-loader, sass-loader
-            // modules: true, // 启用 CSS modules
-          }
-        }, {
-          loader: 'postcss-loader',
-          options: {
-            ident: 'postcss',
-            plugins: [
-              require('autoprefixer'),
-            ]
-          }
-        }, {
-          loader: 'sass-loader'
-        }
-      ]
-    }]
+      use: ['style-loader', 'css-loader'],
+    // }, {
+    //   test: /\.scss$/,
+    //   use: [
+    //     {
+    //       loader: 'style-loader'
+    //     }, {
+    //       loader: 'css-loader',
+    //       options: {
+    //         importLoaders: 2, // 0 => 无 loader(默认); 1 => postcss-loader; 2 => postcss-loader, sass-loader
+    //         // modules: true, // 启用 CSS modules
+    //       }
+    //     }, {
+    //       loader: 'postcss-loader',
+    //       options: {
+    //         ident: 'postcss',
+    //         plugins: [
+    //           require('autoprefixer'),
+    //         ]
+    //       }
+    //     }, {
+    //       loader: 'sass-loader'
+    //     }
+    //   ]
+    }],
   },
   // stats: 'errors-only', // 打包日志如何显示
-	plugins: [
-		new HtmlWebpackPlugin({
+  plugins: [
+    new HtmlWebpackPlugin({
       template: './index.html', // 以template中的html为模板，打包后生成index.html
     }),
     new CleanWebpackPlugin(),
@@ -107,12 +122,12 @@ module.exports = {
     // }),
     new MiniCssExtractPlugin({ // css 分割
       filename: '[name].css', // 直接引用【index.html（入口文件） 引入的名字】
-      chunkFilename: '[name].chunk.css' // 间接引用【其他地方引入使用的名字】
-    })
+      chunkFilename: '[name].chunk.css', // 间接引用【其他地方引入使用的名字】
+    }),
   ],
-	output: {
+  output: {
     filename: '[name].[hash]js', // [hash] 当内容有改动时，hash会改变
     chunkFilename: '[name].[hash].js',
-		path: path.resolve(__dirname, '../dist')
-	}
-}
+    path: path.resolve(__dirname, '../dist'),
+  },
+};
