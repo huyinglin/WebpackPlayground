@@ -1,8 +1,6 @@
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const merge = require('webpack-merge');
-const commonConfig = require('./webpack.common.js');
+// const path = require('path');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
 const devConfig = {
@@ -29,7 +27,8 @@ const devConfig = {
    * pro: cheap-module-source-map
    */
   devtool: 'cheap-module-eval-source-map',
-  devServer: {
+  devServer: { // devServer会将打包文件存在内存中，所以速度更快
+    overlay: true, // 会将lint错误或编译错误，显示一个浮层
     contentBase: './dist', // 指定目录
     open: true, // 启动时是否打开浏览器
     // open: 'Chrome', // 指定浏览器
@@ -38,23 +37,21 @@ const devConfig = {
     proxy: { // 原理是使用 http-proxy-middleware
       '/api': {
         target: 'http://localhost:3000',
-        pathRewrite: {'^/api': ''}, // 可以将url中的`/api`替换成空字符串
+        pathRewrite: {
+          'header.json': 'test.json', // 可以将url中的`header.json`替换成test.json
+        },
         changeOrigin: true, // 解决跨域问题。原理：本地会虚拟一个服务器接收你的请求并代你发送该请求
         secure: false, // 可代理到https的target
-      }
+      },
     },
     // 将多个路径代理到同一个target下，可以用下面的写法
     // proxy: [{
     //   context: ['/auth', '/api'],
     //   target: 'http://localhost:3000',
     // }],
-
+    // historyApiFallback: true, // 404时会默认返回首页
   },
-  // historyApiFallback: true, // 404时会默认返回首页
-  plugins: [
-		new webpack.HotModuleReplacementPlugin()
-	],
-	optimization: {
+  optimization: {
     // usedExports: true
     runtimeChunk: 'single', // chunk hash在不改动时保持不变
     moduleIds: 'hashed',
@@ -65,8 +62,8 @@ const devConfig = {
       maxAsyncRequests: 5, // 按需加载的最大并行请求数
       maxInitialRequests: 3, // 最大的初始化加载次数，最大的初始请求数是为了防止 chunk 划分的过于细致，导致大量的文件请求，降低性能。
       automaticNameDelimiter: '~', // 打包分隔符
-      name: true,       // 打包后的名称，此选项可接收 function
-      cacheGroups: {   // 这里开始设置缓存的 chunks ，缓存组，可以有多个
+      name: true, // 打包后的名称，此选项可接收 function
+      cacheGroups: { // 这里开始设置缓存的 chunks ，缓存组，可以有多个
         vendors: {
           test: /[\\/]node_modules[\\/]/,
           priority: -10, // 权重
@@ -82,10 +79,10 @@ const devConfig = {
           priority: -20,
           filename: 'vendors', // 打包后缓存组的名字
           reuseExistingChunk: true, // 可设置是否重用该chunk
-        }
-      }
-    }
-	},
+        },
+      },
+    },
+  },
   // entry: './src/index.js',
 
   // output: {
@@ -98,8 +95,8 @@ const devConfig = {
     //   template: './index.html', // 以template中的html为模板，打包后生成index.html
     // }),
     // new CleanWebpackPlugin(), // 清除上次的打包文件
-    // new webpack.HotModuleReplacementPlugin(),
+    new webpack.HotModuleReplacementPlugin(),
   ],
-}
+};
 
-module.exports = merge(commonConfig, devConfig);
+module.exports = devConfig;
