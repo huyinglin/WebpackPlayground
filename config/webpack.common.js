@@ -5,7 +5,11 @@ const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
-module.exports = {
+const merge = require('webpack-merge');
+const devConfig = require('./webpack.dev.js');
+const prodConfig = require('./webpack.prod.js');
+
+const commonConfig = {
 	entry: {
     main: './src/index.js'
 	},
@@ -111,8 +115,17 @@ module.exports = {
     })
   ],
 	output: {
-    filename: '[name].[hash]js', // [hash] 当内容有改动时，hash会改变
-    chunkFilename: '[name].[hash].js',
+    filename: '[name].[contenthash]js', // [hash] 当内容有改动时，hash会改变
+    chunkFilename: '[name].[contenthash].js',
 		path: path.resolve(__dirname, '../dist')
 	}
 }
+
+module.exports = (env) => {
+  console.log(434, env);
+  
+  if (env && env.production) {
+    return merge(commonConfig, prodConfig);
+  }
+  return merge(commonConfig, devConfig);
+};

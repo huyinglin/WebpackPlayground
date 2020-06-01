@@ -56,6 +56,8 @@ const devConfig = {
 	],
 	optimization: {
     // usedExports: true
+    runtimeChunk: 'single', // chunk hash在不改动时保持不变
+    moduleIds: 'hashed',
     splitChunks: {
       chunks: 'all', // "initial" | "all"(推荐) | "async" (默认就是async) | 函数
       minSize: 30 * 1000, // 30kb，表示当包的大小大于 30kb 的时候，才会进行代码分割
@@ -96,7 +98,7 @@ const devConfig = {
     //   template: './index.html', // 以template中的html为模板，打包后生成index.html
     // }),
     // new CleanWebpackPlugin(), // 清除上次的打包文件
-    new webpack.HotModuleReplacementPlugin(),
+    // new webpack.HotModuleReplacementPlugin(),
   ],
 }
 
