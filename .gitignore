@@ -4,6 +4,9 @@
 ## 排除happyback
 **/.happypack
 
+## 排除dist
+**/dist
+
 ## 排除npm-debug.log
 **/npm-debug.log
 **/npm-debug.log.*

@@ -1,11 +1,15 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// const FriendlyErrorsWebpackPlugin = require('friendly-errors-webpack-plugin');
+// const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const autoprefixer = require('autoprefixer');
+const merge = require('webpack-merge');
+const devConfig = require('./webpack.dev.js');
+const prodConfig = require('./webpack.prod.js');
 
-module.exports = {
+const commonConfig = {
   entry: {
     main: './src/index.tsx',
   },
@@ -143,4 +147,13 @@ module.exports = {
     chunkFilename: '[name]_[contenthash:8].js',
     path: path.resolve(__dirname, '../dist'),
   },
+};
+
+module.exports = (env) => {
+  console.log('env: ', env);
+
+  if (env && env.production) {
+    return merge(commonConfig, prodConfig);
+  }
+  return merge(commonConfig, devConfig);
 };

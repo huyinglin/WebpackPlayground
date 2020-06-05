@@ -1,12 +1,6 @@
-/* eslint-disable no-dupe-keys */
-/* eslint-disable indent */
-/* eslint-disable no-multi-spaces */
-/* eslint-disable comma-dangle */
-const path = require('path');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const merge = require('webpack-merge');
-const commonConfig = require('./webpack.common.js');
+// const path = require('path');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const webpack = require('webpack');
 
 const devConfig = {
@@ -44,11 +38,11 @@ const devConfig = {
       '/api': {
         target: 'http://localhost:3000',
         pathRewrite: {
-          'header.json': 'test.json'  // 可以将url中的`header.json`替换成test.json
+          'header.json': 'test.json', // 可以将url中的`header.json`替换成test.json
         },
         changeOrigin: true, // 解决跨域问题。原理：本地会虚拟一个服务器接收你的请求并代你发送该请求
         secure: false, // 可代理到https的target
-      }
+      },
     },
     // 将多个路径代理到同一个target下，可以用下面的写法
     // proxy: [{
@@ -57,11 +51,10 @@ const devConfig = {
     // }],
     // historyApiFallback: true, // 404时会默认返回首页
   },
-  plugins: [
-		new webpack.HotModuleReplacementPlugin()
-	],
-	optimization: {
+  optimization: {
     // usedExports: true
+    runtimeChunk: 'single', // chunk hash在不改动时保持不变
+    moduleIds: 'hashed',
     splitChunks: {
       chunks: 'all', // "initial" | "all"(推荐) | "async" (默认就是async) | 函数
       minSize: 30 * 1000, // 30kb，表示当包的大小大于 30kb 的时候，才会进行代码分割
@@ -69,8 +62,8 @@ const devConfig = {
       maxAsyncRequests: 5, // 按需加载的最大并行请求数
       maxInitialRequests: 3, // 最大的初始化加载次数，最大的初始请求数是为了防止 chunk 划分的过于细致，导致大量的文件请求，降低性能。
       automaticNameDelimiter: '~', // 打包分隔符
-      name: true,       // 打包后的名称，此选项可接收 function
-      cacheGroups: {   // 这里开始设置缓存的 chunks ，缓存组，可以有多个
+      name: true, // 打包后的名称，此选项可接收 function
+      cacheGroups: { // 这里开始设置缓存的 chunks ，缓存组，可以有多个
         vendors: {
           test: /[\\/]node_modules[\\/]/,
           priority: -10, // 权重
@@ -86,10 +79,10 @@ const devConfig = {
           priority: -20,
           filename: 'vendors', // 打包后缓存组的名字
           reuseExistingChunk: true, // 可设置是否重用该chunk
-        }
-      }
-    }
-	},
+        },
+      },
+    },
+  },
   // entry: './src/index.js',
 
   // output: {
@@ -104,6 +97,6 @@ const devConfig = {
     // new CleanWebpackPlugin(), // 清除上次的打包文件
     new webpack.HotModuleReplacementPlugin(),
   ],
-}
+};
 
-module.exports = merge(commonConfig, devConfig);
+module.exports = devConfig;
