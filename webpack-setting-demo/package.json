@@ -15,9 +15,10 @@
     "build": "webpack --env production --config ./config/webpack.common.js",
     "build:dll": "webpack --config ./config/webpack.dll.js",
     "analyz": "NODE_ENV=production npm_config_report=true npm run build",
-    "test": "npm run test:smoke && npm run test:unit",
+    "test": "npm run test:smoke && npm run test:cover",
     "test:smoke": "node ./test/smoke/index.js",
-    "test:unit": "istanbul cover mocha"
+    "test:unit": "istanbul cover mocha",
+    "test:cover": "istanbul cover ./node_modules/.bin/_mocha"
   },
   "author": "",
   "license": "ISC",
